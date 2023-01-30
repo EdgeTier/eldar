@@ -34,7 +34,7 @@ class Entry:
             else:
                 res = False
         else:
-            res = self.query in doc
+            res = True if re.search(fr"\b{self.query}\b", doc) else False
 
         if self.not_:
             return not res
