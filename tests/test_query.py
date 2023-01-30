@@ -104,3 +104,31 @@ def test_query_case_sensitive_matching():
     sample_text = "Hello how are you today world?"
     result = query(sample_text)
     assert result is False
+
+
+def test_query_search_with_quotes():
+    """
+    Tests that we don't match a substring in a word and that we do match query types correctly
+    :return:
+    """
+
+    # This should match
+    query = Query("and")
+
+    sample_text = "I want to go ahead and cancel the booking"
+    result = query(sample_text)
+    assert result is True
+
+    # This should match
+    query = Query('and AND not an')
+
+    sample_text = "I want to go ahead and cancel the booking"
+    result = query(sample_text)
+    assert result is True
+
+    # This shouldn't match
+    query = Query("an")
+
+    sample_text = "I want to go ahead and cancel the booking"
+    result = query(sample_text)
+    assert result is False
