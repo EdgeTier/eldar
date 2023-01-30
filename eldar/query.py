@@ -141,7 +141,13 @@ def parse_query(query, ignore_case=True, ignore_accent=True):
         # stop at first balanced operation
         for i, (operator, (start, end)) in enumerate(match):
             left_part = query[:start].strip()
+            if not is_balanced(left_part):
+                continue
+
             right_part = query[end:].strip()
+            if not is_balanced(right_part):
+                continue
+
             break
 
         if left_part is not None and right_part is not None:

@@ -9,7 +9,7 @@ def test_validate_query():
 
     query = Query('Hello AND World')
     validity_check = query.validate_query()
-    #assert validity_check.get("is_valid") is True
+    assert validity_check.get("is_valid") is True
     assert validity_check.get("query_issues") == []
 
     query = Query('(Hello) AND (World')
@@ -90,6 +90,12 @@ def test_query_results():
     query = Query('((Hello AND World) AND NOT (Bad)) AND (Good)')
     # This has a special character which should be decoded
     sample_text = "Hello world how are you today? I'm göod"
+    result = query(sample_text)
+    assert result is True
+
+    query = Query('(("hello" OR "hi") AND ("world" OR "earth"))')
+
+    sample_text = "Hi there, I am from Earth"
     result = query(sample_text)
     assert result is True
 
