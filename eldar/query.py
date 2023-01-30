@@ -142,6 +142,7 @@ def parse_query(query, ignore_case=True, ignore_accent=True):
         for i, (operator, (start, end)) in enumerate(match):
             left_part = query[:start].strip()
             right_part = query[end:].strip()
+            break
 
         if left_part is not None and right_part is not None:
             if operator == "or":
