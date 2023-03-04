@@ -93,9 +93,45 @@ def test_query_results():
     result = query(sample_text)
     assert result is True
 
+    query = Query('(Hello AND World) AND NOT (Bad OR Good)')
+    sample_text = "Hello world how are you today? I'm good"
+    result = query(sample_text)
+    assert result is False
+
+    sample_text = "Hello world how are you today?"
+    result = query(sample_text)
+    assert result is True
+
+    query = Query('(Hello AND World) AND NOT (Bad AND Good)')
+    sample_text = "Hello world how are you today? I'm good"
+    result = query(sample_text)
+    assert result is True
+
+    sample_text = "Hello world how are you today? I'm good but can be bad"
+    result = query(sample_text)
+    assert result is False
+
     query = Query('(("hello" OR "hi") AND ("world" OR "earth"))')
 
     sample_text = "Hi there, I am from Earth"
+    result = query(sample_text)
+    assert result is True
+
+    # Test chained AND NOT
+    query = Query("Hello AND NOT world AND NOT how")
+    sample_text = "Hello world, how are you?"
+    result = query(sample_text)
+    assert result is False
+
+    sample_text = "Hello, how are you?"
+    result = query(sample_text)
+    assert result is False
+
+    sample_text = "Hello world!"
+    result = query(sample_text)
+    assert result is False
+
+    sample_text = "Hello what's up?"
     result = query(sample_text)
     assert result is True
 
@@ -110,7 +146,6 @@ def test_query_case_sensitive_matching():
     sample_text = "Hello how are you today world?"
     result = query(sample_text)
     assert result is False
-
 
 def test_query_search_with_quotes():
     """
