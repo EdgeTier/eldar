@@ -173,3 +173,20 @@ def test_query_search_with_quotes():
     sample_text = "I want to go ahead and cancel the booking"
     result = query(sample_text)
     assert result is False
+
+def test_emoji_matching():
+    """
+    Tests the query with emojis and matches it
+    """
+
+    # this should match
+    query = Query("😊")
+    sample_text = "Hello, how are you?😊"
+    result = query(sample_text)
+    assert result is True
+
+    # this shouldn't match
+    query = Query("😊")
+    sample_text = "Hello, how are you?"
+    result = query(sample_text)
+    assert result is False

@@ -25,20 +25,7 @@ class Query:
             doc = unidecode(doc)
 
         # demojise query
-        doc = emoji.demojize(doc, language='en', delimiters=("::__", "__::"))
-
-        emoji_matches = re.findall(r"::__[a-zA-Z0-9._-]+__::", doc)
-
-        for match in emoji_matches:
-            try:
-                # convert emoji to original format to compute the actual length of it
-                match_as_emoji = emoji.emojize(match.replace("::__", ":").replace("__::", ":"))
-
-                # replace emoji with whitespace equal to the length of emoji
-                doc = re.sub(match, " "*len(match_as_emoji), doc)
-
-            except Exception:
-                doc = re.sub(match, " ", doc)
+        doc = emoji.demojize(doc, language='en')
 
         return doc
 
@@ -131,6 +118,8 @@ class Query:
 
 
 def parse_query(query, ignore_case=True, ignore_accent=True):
+
+    query = emoji.demojize(query, language='en')
     # remove brackets around query
     if query[0] == '(' and query[-1] == ')':
         query = strip_brackets(query)
