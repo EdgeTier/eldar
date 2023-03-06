@@ -162,10 +162,12 @@ def parse_query(query, ignore_case=True, ignore_accent=True):
                     parse_query(right_part, ignore_case, ignore_accent)
                 )
             elif operator == "and not":
+                right_part = re.sub(r"\bAND NOT\b", "OR", right_part)
                 return ANDNOT(
                     parse_query(left_part, ignore_case, ignore_accent),
                     parse_query(right_part, ignore_case, ignore_accent)
                 )
+
     if ignore_case:
         query = query.lower()
     if ignore_accent:
