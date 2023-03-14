@@ -19,13 +19,13 @@ class Query:
         self.query = parse_query(query, ignore_case, ignore_accent)
 
     def preprocess(self, doc):
+        # demojise query
+        doc = emoji.demojize(doc, language='en')
+
         if self.ignore_case:
             doc = doc.lower()
         if self.ignore_accent:
             doc = unidecode(doc)
-
-        # demojise query
-        doc = emoji.demojize(doc, language='en')
 
         return doc
 
