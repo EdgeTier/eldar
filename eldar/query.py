@@ -3,6 +3,7 @@ import re
 from typing import Dict
 from .entry import Entry
 from .operators import AND, ANDNOT, OR
+import emoji
 
 
 class Query:
@@ -18,10 +19,14 @@ class Query:
         self.query = parse_query(query, ignore_case, ignore_accent)
 
     def preprocess(self, doc):
+        # demojise query
+        doc = emoji.demojize(doc, language='en')
+
         if self.ignore_case:
             doc = doc.lower()
         if self.ignore_accent:
             doc = unidecode(doc)
+
         return doc
 
     def evaluate(self, doc):
@@ -113,6 +118,8 @@ class Query:
 
 
 def parse_query(query, ignore_case=True, ignore_accent=True):
+
+    query = emoji.demojize(query, language='en')
     # remove brackets around query
     if query[0] == '(' and query[-1] == ')':
         query = strip_brackets(query)

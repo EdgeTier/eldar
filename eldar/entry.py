@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from dataclasses import dataclass
+import string
 
 from .regex import WILD_CARD_REGEX
 
@@ -21,6 +22,19 @@ class Entry:
         else:
             self.rgx = None
 
+    def generate_search_regex(self, query: str) -> str:
+        """
+        checks whether the query starts or ends with punctuation and handles it
+        """
+        search_query = f"{query}"
+        if search_query[0] not in string.punctuation:
+            search_query = fr"\b{search_query}"
+
+        if search_query[-1] not in string.punctuation:
+            search_query = fr"{search_query}\b"
+
+        return search_query
+
     def evaluate(self, doc):
         if self.rgx:
 
@@ -34,7 +48,8 @@ class Entry:
             else:
                 res = False
         else:
-            res = True if re.search(fr"\b{self.query}\b", doc) else False
+            search_query = self.generate_search_regex(self.query)
+            res = True if re.search(f"{search_query}", doc) else False
 
         if self.not_:
             return not res
