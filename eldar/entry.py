@@ -28,10 +28,10 @@ class Entry:
         """
         search_query = f"{query}"
         if search_query[0] not in string.punctuation:
-            search_query = f"\b{search_query}"
+            search_query = fr"\b{search_query}"
 
         if search_query[-1] not in string.punctuation:
-            search_query = f"{search_query}\b"
+            search_query = fr"{search_query}\b"
 
         return search_query
 
