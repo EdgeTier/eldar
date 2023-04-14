@@ -190,3 +190,52 @@ def test_emoji_matching():
     sample_text = "Hello, how are you?"
     result = query(sample_text)
     assert result is False
+
+
+def test_match_with_regex_characters():
+    """
+    Tests that if the user passes a regex special character in a search (e.g. [ or .), it won't mess things up
+    :return:
+    """
+
+    # this should match
+    query = Query("[WARNING]")
+    sample_text = "[WARNING] This message comes from someone outside your organisation"
+    result = query(sample_text)
+    assert result is True
+
+    # this should not match
+    query = Query("[WARNING]")
+    sample_text = "[TEST] This message comes from someone outside your organisation"
+    result = query(sample_text)
+    assert result is False
+
+    # If this was a normal regex it would match but it shouldn't here
+    query = Query("[A|B]")
+    sample_text = "A is the first letter and B is the second"
+    result = query(sample_text)
+    assert result is False
+
+    # But now this pattern should match
+    query = Query("[A|B]")
+    sample_text = "[A|B] is a match"
+    result = query(sample_text)
+    assert result is True
+
+    # Again a regex pattern that shouldn't match
+    query = Query("Hello.*")
+    sample_text = "Hello world"
+    result = query(sample_text)
+    assert result is False
+
+    # Again a regex pattern that shouldn't match
+    query = Query("CHello.*")
+    sample_text = "Hello.* world"
+    result = query(sample_text)
+    assert result is False
+
+    query = Query("Hello.*")
+    sample_text = "Hello.* world"
+    result = query(sample_text)
+    assert result is True
+
