@@ -15,25 +15,21 @@ class Entry:
             query = query[4:]
 
         self.query = strip_quotes(query)
-
-        if "*" in self.query:
-            self.pattern = self.query.replace("*", WILD_CARD_REGEX)
-            self.rgx = re.compile(self.pattern)
-        else:
-            self.rgx = None
+        self.rgx = None
 
     def generate_search_regex(self, query: str) -> str:
         """
         checks whether the query starts or ends with punctuation and handles it
         """
-        search_query = f"{query}"
-        if search_query[0] not in string.punctuation:
-            search_query = fr"\b{search_query}"
+        search_query_escaped = f"{re.escape(query)}"
 
-        if search_query[-1] not in string.punctuation:
-            search_query = fr"{search_query}\b"
+        if query[0] not in string.punctuation:
+            search_query_escaped = fr"\b{search_query_escaped}"
 
-        return search_query
+        if query[-1] not in string.punctuation:
+            search_query_escaped = fr"{search_query_escaped}\b"
+
+        return search_query_escaped
 
     def evaluate(self, doc):
         if self.rgx:
